@@ -64,3 +64,78 @@ def motor_inferencia(fuzz_temp, fuzz_umid, fuzz_pres):
         print(f"Regra {i+1}: Ativação = {grau_ativacao:.2f} -> Saída: {regra['saida']}")
         
     return ativacoes
+
+
+# --- Bloco de Fuzzificação (Item 8 do Relatório) ---
+
+def fuzzificacao(temp_val, umid_val, pres_val):
+    # 1. Pertinência para Temperatura
+    # Usando os pontos (a, b, c) definidos no Bloco 2
+    fuzz_temp = {
+        "Fria":      triangular(temp_val, 10, 10, 22),
+        "Agradavel": triangular(temp_val, 18, 24, 30),
+        "Quente":    triangular(temp_val, 26, 40, 40)
+    }
+
+    # 2. Pertinência para Umidade
+    fuzz_umid = {
+        "Baixa": triangular(umid_val, 0, 0, 40),
+        "Media": triangular(umid_val, 30, 50, 70),
+        "Alta":  triangular(umid_val, 60, 100, 100)
+    }
+
+    # 3. Pertinência para Presença de Pessoas
+    fuzz_pres = {
+        "Poucas":   triangular(pres_val, 0, 0, 8),
+        "Moderada": triangular(pres_val, 5, 10, 15),
+        "Muitas":   triangular(pres_val, 12, 20, 20)
+    }
+
+    return fuzz_temp, fuzz_umid, fuzz_pres
+
+# --- EXEMPLO DE TESTE (Um dos 3 testes obrigatórios) ---
+t_ent, u_ent, p_ent = 28, 65, 12  # Valores de exemplo
+
+f_temp, f_umid, f_pres = fuzzificacao(t_ent, u_ent, p_ent)
+
+print("--- Graus de Pertinência Obtidos (Item 8) ---")
+print(f"Temperatura {t_ent}°C: {f_temp}")
+print(f"Umidade {u_ent}%: {f_umid}")
+print(f"Presença {p_ent} pessoas: {f_pres}")
+
+# --- Bloco de Fuzzificação (Item 8 do Relatório) ---
+
+def fuzzificacao(temp_val, umid_val, pres_val):
+    # 1. Pertinência para Temperatura
+    # Usando os pontos (a, b, c) definidos no Bloco 2
+    fuzz_temp = {
+        "Fria":      triangular(temp_val, 10, 10, 22),
+        "Agradavel": triangular(temp_val, 18, 24, 30),
+        "Quente":    triangular(temp_val, 26, 40, 40)
+    }
+
+    # 2. Pertinência para Umidade
+    fuzz_umid = {
+        "Baixa": triangular(umid_val, 0, 0, 40),
+        "Media": triangular(umid_val, 30, 50, 70),
+        "Alta":  triangular(umid_val, 60, 100, 100)
+    }
+
+    # 3. Pertinência para Presença de Pessoas
+    fuzz_pres = {
+        "Poucas":   triangular(pres_val, 0, 0, 8),
+        "Moderada": triangular(pres_val, 5, 10, 15),
+        "Muitas":   triangular(pres_val, 12, 20, 20)
+    }
+
+    return fuzz_temp, fuzz_umid, fuzz_pres
+
+# --- EXEMPLO DE TESTE (Um dos 3 testes obrigatórios) ---
+t_ent, u_ent, p_ent = 28, 65, 12  # Valores de exemplo
+
+f_temp, f_umid, f_pres = fuzzificacao(t_ent, u_ent, p_ent)
+
+print("--- Graus de Pertinência Obtidos (Item 8) ---")
+print(f"Temperatura {t_ent}°C: {f_temp}")
+print(f"Umidade {u_ent}%: {f_umid}")
+print(f"Presença {p_ent} pessoas: {f_pres}")
