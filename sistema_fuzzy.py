@@ -76,3 +76,57 @@ print(f"Temp {t_ent}: {f_t}\nUmid {u_ent}: {f_u}\nPres {p_ent}: {f_p}")
 
 # Passo 2: Inferência
 lista_ativacoes = motor_inferencia(f_t, f_u, f_p)
+# --- Bloco 5: Agregação (Item 10 do Relatório) ---
+
+def agregacao(lista_ativacoes, uni_saida):
+    # 1. Definimos os conjuntos fuzzy de saída para todo o universo (eixo X)
+    saida_baixa = np.array([triangular(x, 0, 0, 50) for x in uni_saida])
+    saida_media = np.array([triangular(x, 25, 50, 75) for x in uni_saida])
+    saida_alta  = np.array([triangular(x, 50, 100, 100) for x in uni_saida])
+
+    # 2. Inicializamos o conjunto agregado com zeros
+    agregado = np.zeros_like(uni_saida)
+
+    # 3. Aplicamos as ativações de cada regra (Item 9 -> Item 10)
+    for regra in lista_ativacoes:
+        valor_ativacao = regra["valor"]
+        
+        if regra["saida"] == "Baixa":
+            # "Corta" o triângulo no nível da ativação (operador MIN)
+            corte = np.minimum(valor_ativacao, saida_baixa)
+        elif regra["saida"] == "Media":
+            corte = np.minimum(valor_ativacao, saida_media)
+        else: # Alta
+            corte = np.minimum(valor_ativacao, saida_alta)
+        
+        # Agrega usando o operador MAX (conforme permitido pelo documento)
+        agregado = np.maximum(agregado, corte)
+        
+    return agregado
+
+# --- CONTINUANDO O TESTE ---
+# Gerando a saída agregada
+saida_final_agregada = agregacao(lista_ativacoes, uni_saida)
+
+print("\n--- Saída Agregada (Item 10) ---")
+print(f"Vetor de agregação gerado com {len(saida_final_agregada)} pontos.")
+
+
+# --- Bloco 6: Defuzzificação (Item 11 do Relatório) ---
+
+def defuzzificacao_centroide(uni_saida, agregado):
+    # Cálculo do Centroide: Soma(x * pertinencia) / Soma(pertinencia)
+    numerador = np.sum(uni_saida * agregado)
+    denominador = np.sum(agregado)
+    
+    # Tratamento caso nenhuma regra seja ativada (evita divisão por zero)
+    if denominador == 0:
+        return 0.0
+    
+    return numerador / denominador
+
+# --- FINALIZANDO O TESTE ---
+valor_final = defuzzificacao_centroide(uni_saida, saida_final_agregada)
+
+print("\n--- Resultado Final (Item 11) ---")
+print(f"Valor defuzzificado: {valor_final:.2f}% de velocidade do ventilador.")
