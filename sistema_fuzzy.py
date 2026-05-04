@@ -130,3 +130,70 @@ valor_final = defuzzificacao_centroide(uni_saida, saida_final_agregada)
 
 print("\n--- Resultado Final (Item 11) ---")
 print(f"Valor defuzzificado: {valor_final:.2f}% de velocidade do ventilador.")
+
+
+def plotar_entradas(uni_temp, uni_umid, uni_pres):
+    plt.figure(figsize=(15, 5))
+
+    # Gráfico de Temperatura
+    plt.subplot(1, 3, 1)
+    # Calculamos os Ys para cada ponto do X (universo)
+    y_fria = [triangular(x, 10, 10, 22) for x in uni_temp]
+    y_agra = [triangular(x, 18, 24, 30) for x in uni_temp]
+    y_quen = [triangular(x, 26, 40, 40) for x in uni_temp]
+    
+    plt.plot(uni_temp, y_fria, label='Fria')
+    plt.plot(uni_temp, y_agra, label='Agradável')
+    plt.plot(uni_temp, y_quen, label='Quente')
+    plt.title('Pertinência: Temperatura (Item 12)')
+    plt.legend()
+
+    # Gráfico de Umidade
+    plt.subplot(1, 3, 2)
+    y_baixa = [triangular(x, 0, 0, 40) for x in uni_umid]
+    y_media = [triangular(x, 30, 50, 70) for x in uni_umid]
+    y_alta  = [triangular(x, 60, 100, 100) for x in uni_umid]
+    
+    plt.plot(uni_umid, y_baixa, label='Baixa')
+    plt.plot(uni_umid, y_media, label='Média')
+    plt.plot(uni_umid, y_alta, label='Alta')
+    plt.title('Pertinência: Umidade (Item 12)')
+    plt.legend()
+
+    # Gráfico de Presença
+    plt.subplot(1, 3, 3)
+    y_pouc = [triangular(x, 0, 0, 8) for x in uni_pres]
+    y_mode = [triangular(x, 5, 10, 15) for x in uni_pres]
+    y_muit = [triangular(x, 12, 20, 20) for x in uni_pres]
+    
+    plt.plot(uni_pres, y_pouc, label='Poucas')
+    plt.plot(uni_pres, y_mode, label='Moderada')
+    plt.plot(uni_pres, y_muit, label='Muitas')
+    plt.title('Pertinência: Presença (Item 12)')
+    plt.legend()
+
+    plt.tight_layout()
+    plt.show()
+
+# Chamar a função
+plotar_entradas(uni_temp, uni_umid, uni_pres)
+
+
+def plotar_saida_agregada(uni_saida, agregado, valor_defuzz):
+    plt.figure(figsize=(8, 5))
+    
+    # Desenha a área sombreada (Item 13)
+    plt.fill_between(uni_saida, 0, agregado, facecolor='orange', alpha=0.5, label='Saída Agregada')
+    
+    # Desenha a linha do valor final defuzzificado (Item 11)
+    plt.axvline(x=valor_defuzz, color='red', linestyle='--', label=f'Centroide: {valor_defuzz:.2f}%')
+    
+    plt.title('Saída Agregada antes da Defuzzificação (Item 13)')
+    plt.xlabel('Velocidade do Ventilador (%)')
+    plt.ylabel('Grau de Pertinência')
+    plt.legend()
+    plt.grid(True)
+    plt.show()
+
+# Chamar a função usando os dados dos blocos anteriores
+plotar_saida_agregada(uni_saida, saida_final_agregada, valor_final)

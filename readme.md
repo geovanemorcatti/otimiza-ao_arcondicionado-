@@ -1,10 +1,3 @@
-## ideia 
-
-Descrição do problema.Como o documento **"IC_007a_Atividade_Mandani_Fuzzy.pdf"** sugere temas como controle de ventilação, irrigação e aquecimento[cite: 1], preparei uma proposta de **Descrição do Problema** focada em um **Sistema de Controle de Ar-Condicionado Inteligente**.
-
-Este tema é ideal porque as variáveis são fáceis de visualizar e permitem criar as 10 regras exigidas de forma lógica.
-
----
 
 ### Descrição do Problema: Controle de Climatização Inteligente
 
